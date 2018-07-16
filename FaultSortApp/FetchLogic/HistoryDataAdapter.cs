@@ -210,10 +210,13 @@ namespace FaultSortApp
                     _serviceClient = CreateServiceClient();
                     _serviceClient.Open();
                     //byte[] data = _serviceClient.GetFullResolutionData(tre, measurementIDs.ToArray());
-                    byte[] data = await Task.Run<byte[]>(() =>
+                    /*
+                     * byte[] data = await Task.Run<byte[]>(() =>
                         {
                             return _serviceClient.GetFullResolutionData(tre, measurementIDs.ToArray());
                         });
+                   */
+                    byte[] data = (await _serviceClient.GetFullResolutionDataAsync(tre, measurementIDs.ToArray())).data;
                     _serviceClient.Close();
                     PhasorPointBinaryDataParser parser = new PhasorPointBinaryDataParser();
                     //parsedData = parser.Parse(data);
@@ -223,7 +226,6 @@ namespace FaultSortApp
                     });
                     return parsedData;
                 }
-
             }
             catch (Exception e)
             {

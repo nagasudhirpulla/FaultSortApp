@@ -1,0 +1,4 @@
+﻿<HistoryDataProvider>
+	<DataSource Host="172.16.183.131" Port="24721" Path="/eterra-ws/HistoricalTrendProvider" UserName="pdcAdmin" Password="p@ssw0rd" />
+	<LatencyTime>1</LatencyTime>
+</HistoryDataProvider>

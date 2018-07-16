@@ -5,8 +5,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FaultSortApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="800" Width="800">
     <Grid>
-        
+        <Button Name="FetchTestBtn" Content="Test Async Fetch" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="103" Click="FetchTestBtn_Click"/>
+        <Button Name="PostgresTestBtn" Content="Test Postgres Fetch" HorizontalAlignment="Left" Margin="150,10,0,0" VerticalAlignment="Top" Width="103" Click="FetchPostgresBtn_Click"/>
+        <TextBox Name="FetchRespTxtBx" HorizontalAlignment="Left" Height="67" Margin="10,51,0,0" TextWrapping="Wrap" Text="Fetch Response" VerticalAlignment="Top" Width="472"/>
+        <DataGrid Name="ResDataGridView" ItemsSource="{Binding}" HorizontalAlignment="Left" Height="417" Margin="10,137,0,0" VerticalAlignment="Top" Width="472"/>
+
     </Grid>
 </Window>
