@@ -1,0 +1,682 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:loc="http://www.eterra.com/public/services/data/dataTypes" xmlns:wsp="http://www.w3.org/ns/ws-policy" targetNamespace="http://www.eterra.com/public/services/data/dataTypes" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="PdxType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="PDX1" />
+      <xs:enumeration value="PDX2" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="PdxValue">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="f" />
+      <xs:enumeration value="a" />
+      <xs:enumeration value="d" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Status">
+    <xs:restriction base="xs:string">
+      <xs:annotation>
+        <xs:documentation xml:lang="en">
+            "None" represents unobserved or unavailiable.
+          </xs:documentation>
+      </xs:annotation>
+      <xs:enumeration value="None" />
+      <xs:enumeration value="Normal" />
+      <xs:enumeration value="Alert" />
+      <xs:enumeration value="Alarm" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="MeasurementType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Positive_Sequence_Voltage_Magnitude" />
+      <xs:enumeration value="Positive_Sequence_Voltage_Angle" />
+      <xs:enumeration value="Positive_Sequence_Current_Magnitude" />
+      <xs:enumeration value="Positive_Sequence_Current_Angle" />
+      <xs:enumeration value="Negative_Sequence_Voltage_Magnitude" />
+      <xs:enumeration value="Negative_Sequence_Voltage_Angle" />
+      <xs:enumeration value="Negative_Sequence_Current_Magnitude" />
+      <xs:enumeration value="Negative_Sequence_Current_Angle" />
+      <xs:enumeration value="Zero_Sequence_Voltage_Magnitude" />
+      <xs:enumeration value="Zero_Sequence_Voltage_Angle" />
+      <xs:enumeration value="Zero_Sequence_Current_Magnitude" />
+      <xs:enumeration value="Zero_Sequence_Current_Angle" />
+      <xs:enumeration value="PhaseA_Voltage_Magnitude" />
+      <xs:enumeration value="PhaseA_Voltage_Angle" />
+      <xs:enumeration value="PhaseA_Current_Magnitude" />
+      <xs:enumeration value="PhaseA_Current_Angle" />
+      <xs:enumeration value="PhaseB_Voltage_Magnitude" />
+      <xs:enumeration value="PhaseB_Voltage_Angle" />
+      <xs:enumeration value="PhaseB_Current_Magnitude" />
+      <xs:enumeration value="PhaseB_Current_Angle" />
+      <xs:enumeration value="PhaseC_Voltage_Magnitude" />
+      <xs:enumeration value="PhaseC_Voltage_Angle" />
+      <xs:enumeration value="PhaseC_Current_Magnitude" />
+      <xs:enumeration value="PhaseC_Current_Angle" />
+      <xs:enumeration value="Frequency" />
+      <xs:enumeration value="DFDT" />
+      <xs:enumeration value="Analog" />
+      <xs:enumeration value="Single_Digital" />
+      <xs:enumeration value="Double_Digital" />
+      <xs:enumeration value="Reference_Angle" />
+      <xs:enumeration value="Angle_Difference" />
+      <xs:enumeration value="MW_Line" />
+      <xs:enumeration value="MVar_Line" />
+      <xs:enumeration value="MW_Corridor" />
+      <xs:enumeration value="MVar_Corridor" />
+      <xs:enumeration value="User_Defined" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Unit">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="MW" />
+      <xs:enumeration value="MVAR" />
+      <xs:enumeration value="MVA" />
+      <xs:enumeration value="Degrees" />
+      <xs:enumeration value="Radians" />
+      <xs:enumeration value="Hz" />
+      <xs:enumeration value="Amps" />
+      <xs:enumeration value="kV" />
+      <xs:enumeration value="Hz/s" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="TimeRangeElement">
+    <xs:sequence>
+      <xs:element name="startTime" type="xs:dateTime" />
+      <xs:element name="endTime" type="xs:dateTime" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="IdList">
+    <xs:annotation>
+      <xs:documentation>
+            A list of related ids.
+            </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="id" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="IdCollection">
+    <xs:annotation>
+      <xs:documentation>
+          A collection of related names.
+          These can be ordered and noted as unused.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="entry" type="loc:IdEntry" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="IdEntry">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+          An entry in a collection of related names.
+          If the index is present, then it can be used to order the entries.
+          By convention, indexing starts at 0.
+          An index of -1 indicates that the entry is currently unused.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="id" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="index" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RocMap">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+          Define an RoC in terms of its source measurement, type, and window length.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="measurementID" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="1" name="sourceMeasurementID" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="1" name="type" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="windowLength" type="xs:float" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AngleMapping">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+          Define an angle difference ("id") based on the two angles ("mappedID") from which
+          the difference is calculated.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="id" type="xs:int" />
+      <xs:element minOccurs="2" maxOccurs="2" name="mappedID" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="InterchangeMapping">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+          Define an interchange ("id") in terms of one or more measurement units ("mappedID").
+        </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="id" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="unbounded" name="mappedID" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RocMappingList">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="rocMap" type="loc:RocMap" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AngleMappingList">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="mapping" type="loc:AngleMapping" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="InterchangeMappingList">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="mapping" type="loc:InterchangeMapping" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="NameMappingList">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="nameMap" type="loc:NameMap" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="NameMap">
+    <xs:sequence>
+      <xs:element name="measurementID" type="xs:int" />
+      <xs:element name="name" type="xs:string" />
+      <xs:element name="nameState" type="loc:NameState" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="NameState">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+          This enumeration reflects the state of a nameMap element.
+          The NameState for Latest is Normal.
+          The NameState is 
+          * Added/Removed if a name is added/removed for an ID.
+          * Offline if an offline condition is detected for an ID.
+          * Normal if the Offline condition ends.
+          In the Removed NameState, information associated with the ID may be removed.
+          If Offline, the NameState may be indicated.
+          If an ID is Removed and Added with a new name in a single step (effectively a rename), 
+          both of these occur in the same response message.
+        </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Added" />
+      <xs:enumeration value="Removed" />
+      <xs:enumeration value="Offline" />
+      <xs:enumeration value="Normal" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="StringList">
+    <xs:annotation>
+      <xs:documentation>
+              A list of related strings.
+            </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="value" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="MeasurementTypeList">
+    <xs:annotation>
+      <xs:documentation>
+              A list of measurement types.
+            </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="measurementTypes" type="loc:MeasurementType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PdxIdList">
+    <xs:annotation>
+      <xs:documentation>
+            A list of related PDX ids.
+            </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="id" type="loc:PdxId" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PdxId">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+          A composite PDX ID
+        </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="measurementId" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="1" name="pdxType" type="loc:PdxType" />
+      <xs:element minOccurs="1" maxOccurs="1" name="modeId" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="1" name="pdxValue" type="loc:PdxValue" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PdxModeCentricIdList">
+    <xs:annotation>
+      <xs:documentation>
+            A list of related PDX mode centric ids.
+            </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="id" type="loc:PdxModeCentricId" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PdxModeCentricId">
+    <xs:annotation>
+      <xs:documentation xml:lang="en">
+          A composite PDX mode centric ID
+        </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="pdxType" type="loc:PdxType" />
+      <xs:element minOccurs="1" maxOccurs="1" name="modeId" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="1" name="pdxValue" type="loc:PdxValue" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="InternalServerFaultDetail">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="ErrorCode" type="xs:int" />
+        <xs:element minOccurs="0" maxOccurs="1" name="ErrorMessage" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="InvalidDataFaultDetail">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="ErrorMessage" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="InvalidParametersFaultDetail">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="ErrorMessage" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PmuMinMaxDataRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="timeRange" type="loc:TimeRangeElement" />
+        <xs:element name="dataRate" type="xs:int" />
+        <xs:element name="ids" type="loc:IdList" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PmuMinMaxDataResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmime:expectedContentTypes="application/octet-stream" name="data" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FullResolutionDataRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="timeRange" type="loc:TimeRangeElement" />
+        <xs:element name="ids" type="loc:IdList" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FullResolutionDataResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmime:expectedContentTypes="application/octet-stream" name="data" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PdxModeFilteredDataRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="timeRange" type="loc:TimeRangeElement" />
+        <xs:element name="ids" type="loc:PdxIdList" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PdxModeFilteredDataResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmime:expectedContentTypes="application/octet-stream" name="data" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PdxModeCentricDataRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="timeRange" type="loc:TimeRangeElement" />
+        <xs:element name="ids" type="loc:PdxModeCentricIdList" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PdxModeCentricDataResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmime:expectedContentTypes="application/octet-stream" name="data" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AveragedDataRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="timeRange" type="loc:TimeRangeElement" />
+        <xs:element name="stations" type="loc:StringList" />
+        <xs:element name="measurementTypes" type="loc:MeasurementTypeList" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="AveragedDataResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmime:expectedContentTypes="application/octet-stream" name="data" type="xs:base64Binary" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ReferenceAngleRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="timeRange" type="loc:TimeRangeElement" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ReferenceAngleResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="referenceAngleChangeList" type="loc:ReferenceAngleChangeList" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="ReferenceAngleChangeList">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="unbounded" name="referenceAngleChanges" type="loc:ReferenceAngleChange" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ReferenceAngleChange">
+    <xs:sequence>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="1" name="timestamp" type="xs:dateTime" />
+        <xs:element minOccurs="1" maxOccurs="1" name="referenceAngleId" type="xs:int" />
+      </xs:sequence>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MeasurementBasedEventsRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="timeRange" type="loc:TimeRangeElement" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MeasurementBasedEventsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="events" type="loc:EventsList" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="EventsList">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="event" type="loc:SimpleEvent" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="EventType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ROC_HIGH" />
+      <xs:enumeration value="ROC_LOW" />
+      <xs:enumeration value="ROC_NONE" />
+      <xs:enumeration value="High" />
+      <xs:enumeration value="Low" />
+      <xs:enumeration value="None" />
+      <xs:enumeration value="GenLoss" />
+      <xs:enumeration value="LoadLoss" />
+      <xs:enumeration value="LineLoss" />
+      <xs:enumeration value="FrequencyDisturbance" />
+      <xs:enumeration value="AngleDisturbance" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="SimpleEvent">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="time" type="xs:dateTime" />
+      <xs:element minOccurs="1" maxOccurs="1" name="eventId" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="1" name="status" type="loc:Status" />
+      <xs:element minOccurs="0" maxOccurs="1" name="description" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="cause" type="xs:boolean" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="OscillationEvent">
+    <xs:complexContent mixed="false">
+      <xs:extension base="loc:SimpleEvent">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="value" type="loc:EventModeValueElement" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="EventModeValueElement">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="measurementID" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="1" name="modeId" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="frequency" type="xs:float" />
+      <xs:element minOccurs="0" maxOccurs="1" name="amplitude" type="xs:float" />
+      <xs:element minOccurs="1" maxOccurs="1" name="measurementType" type="loc:MeasurementType" />
+      <xs:element minOccurs="0" maxOccurs="1" name="damping" type="xs:float" />
+      <xs:element minOccurs="0" maxOccurs="1" name="energy" type="xs:float" />
+      <xs:element minOccurs="0" maxOccurs="1" name="type" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DomainEvent">
+    <xs:complexContent mixed="false">
+      <xs:extension base="loc:SimpleEvent">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="type" type="loc:EventType" />
+          <xs:element minOccurs="1" maxOccurs="1" name="value" type="loc:EventDataElement" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="EventDataElement">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="measurementID" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="1" name="scalarValue" type="xs:float" />
+      <xs:element minOccurs="0" maxOccurs="1" name="description" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SubstationEvent">
+    <xs:complexContent mixed="false">
+      <xs:extension base="loc:SimpleEvent">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="measurementType" type="loc:MeasurementType" />
+          <xs:element minOccurs="1" maxOccurs="1" name="type" type="loc:EventType" />
+          <xs:element minOccurs="1" maxOccurs="1" name="causeEventId" type="xs:int" />
+          <xs:element minOccurs="1" maxOccurs="1" name="triggerMeasurementId" type="xs:int" />
+          <xs:element minOccurs="1" maxOccurs="1" name="substationName" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="WamsEvent">
+    <xs:complexContent mixed="false">
+      <xs:extension base="loc:SimpleEvent">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="measurementType" type="loc:MeasurementType" />
+          <xs:element minOccurs="1" maxOccurs="1" name="type" type="loc:EventType" />
+          <xs:element minOccurs="1" maxOccurs="1" name="uuid" type="xs:string" />
+          <xs:element minOccurs="1" maxOccurs="1" name="triggerMeasurementId" type="xs:int" />
+          <xs:element minOccurs="1" maxOccurs="1" name="triggerSubstationName" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="PdxDataAndEventsRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="timeRange" type="loc:TimeRangeElement" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PdxDataAndEventsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="events" type="loc:EventsList" />
+        <xs:element minOccurs="0" maxOccurs="1" name="overviewStates" type="loc:OverviewStateList" />
+        <xs:element minOccurs="0" maxOccurs="1" name="modeValueElements" type="loc:ModeValuesList" />
+        <xs:element minOccurs="0" maxOccurs="1" name="modeShapes" type="loc:OscShapesList" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="OverviewState">
+    <xs:sequence>
+      <xs:element name="time" type="xs:dateTime" />
+      <xs:element name="name" type="xs:string" />
+      <xs:element name="status" type="loc:Status" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="OverviewStateList">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="overviewState" type="loc:OverviewState" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="OscShapesList">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="oscShapes" type="loc:OscShapes" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="OscShapes">
+    <xs:sequence>
+      <xs:element name="time" type="xs:dateTime" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="oscShapePerMode" type="loc:OscShapesPerMode" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="OscShapesPerMode">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="modeId" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="oscShape" type="loc:OscShape" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="OscShape">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="magnitude" type="xs:float" />
+      <xs:element minOccurs="1" maxOccurs="1" name="phaseAngle" type="xs:float" />
+      <xs:element minOccurs="1" maxOccurs="1" name="phaseAmplitude" type="xs:float" />
+      <xs:element minOccurs="1" maxOccurs="1" name="measurementID" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="1" name="measurementType" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ModeValueElement">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="modeId" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="status" type="loc:Status" />
+      <xs:element minOccurs="0" maxOccurs="1" name="frequency" type="xs:float" />
+      <xs:element minOccurs="0" maxOccurs="1" name="damping" type="xs:float" />
+      <xs:element minOccurs="0" maxOccurs="1" name="energy" type="xs:float" />
+      <xs:element minOccurs="0" maxOccurs="1" name="type" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ModeValues">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="time" type="xs:dateTime" />
+      <xs:element minOccurs="0" maxOccurs="1" name="modeDataElements" type="loc:ModeValueElementList" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ModeValueElementList">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="modeValueElement" type="loc:ModeValueElement" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ModeValuesList">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="modeValue" type="loc:ModeValues" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="MeasurementBasedOverviewStateRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="timeRange" type="loc:TimeRangeElement" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MeasurementBasedOverviewStateResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="overviewStates" type="loc:OverviewStateList" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ModeSettingsRequest" />
+  <xs:element name="ModeSettingsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="modeSettings" type="loc:OscModeSettings" />
+        <xs:element minOccurs="0" maxOccurs="1" name="pdx1Measurements" type="loc:IdList" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="OscModeSettings">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="modeSetting" type="loc:OscModeSetting" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="OscModeSetting">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="modeId" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="minFrequency" type="xs:float" />
+      <xs:element minOccurs="1" maxOccurs="1" name="maxFrequency" type="xs:float" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DataElementSettingsRequest" />
+  <xs:element name="DataElementSettingsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="dataElementSettings" type="loc:DataElementSettings" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="DataElementSetting">
+    <xs:sequence>
+      <xs:element minOccurs="1" maxOccurs="1" name="measurementID" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="1" name="alarm" type="xs:boolean" />
+      <xs:element minOccurs="0" maxOccurs="1" name="alertthreshold" type="loc:LimitSetting" />
+      <xs:element minOccurs="0" maxOccurs="1" name="alarmthreshold" type="loc:LimitSetting" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="LimitSetting">
+    <xs:sequence>
+      <xs:element name="high" type="xs:float" />
+      <xs:element name="low" type="xs:float" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DataElementSettings">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="dataElementSetting" type="loc:DataElementSetting" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ConfigurationRequest" />
+  <xs:complexType name="ConfigurationResponseElement">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="pmuID" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="1" name="measurementID" type="xs:int" />
+      <xs:element minOccurs="1" maxOccurs="1" name="stationName" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="kv" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="deviceID" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="measurementType" type="loc:MeasurementType" />
+      <xs:element minOccurs="1" maxOccurs="1" name="scadaUiName" type="xs:string" />
+      <xs:element minOccurs="1" maxOccurs="1" name="unit" type="loc:Unit" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ConfigurationResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="unbounded" name="configurationResponseElement" type="loc:ConfigurationResponseElement" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MappingsRequest" />
+  <xs:element name="MappingsResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="1" name="overviewStateIdList" type="loc:IdCollection" />
+        <xs:element minOccurs="0" maxOccurs="1" name="compositeEventIdList" type="loc:IdCollection" />
+        <xs:element minOccurs="0" maxOccurs="1" name="angleMappingList" type="loc:AngleMappingList" />
+        <xs:element minOccurs="0" maxOccurs="1" name="interchangeMappingList" type="loc:InterchangeMappingList" />
+        <xs:element minOccurs="0" maxOccurs="1" name="rocMappingList" type="loc:RocMappingList" />
+        <xs:element minOccurs="0" maxOccurs="1" name="nameMappingList" type="loc:NameMappingList" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

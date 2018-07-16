@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="http://www.eterra.com/public/services/data/historicaltrendprovider" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns="http://www.eterra.com/public/services/data/dataTypes" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://www.eterra.com/public/services/data/historicaltrendprovider" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+      <xsd:import schemaLocation="DataTypes.xsd" namespace="http://www.eterra.com/public/services/data/dataTypes" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="GetPmuMinMaxDataRequest">
+    <wsdl:part name="parameters" element="ns:PmuMinMaxDataRequest" />
+  </wsdl:message>
+  <wsdl:message name="GetPmuMinMaxDataResponse">
+    <wsdl:part name="parameters" element="ns:PmuMinMaxDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetFullResolutionDataRequest">
+    <wsdl:part name="parameters" element="ns:FullResolutionDataRequest" />
+  </wsdl:message>
+  <wsdl:message name="GetFullResolutionDataResponse">
+    <wsdl:part name="parameters" element="ns:FullResolutionDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetPdxModeFilteredDataRequest">
+    <wsdl:part name="parameters" element="ns:PdxModeFilteredDataRequest" />
+  </wsdl:message>
+  <wsdl:message name="GetPdxModeFilteredDataResponse">
+    <wsdl:part name="parameters" element="ns:PdxModeFilteredDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetPdxModeCentricDataRequest">
+    <wsdl:part name="parameters" element="ns:PdxModeCentricDataRequest" />
+  </wsdl:message>
+  <wsdl:message name="GetPdxModeCentricDataResponse">
+    <wsdl:part name="parameters" element="ns:PdxModeCentricDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetAveragedDataRequest">
+    <wsdl:part name="parameters" element="ns:AveragedDataRequest" />
+  </wsdl:message>
+  <wsdl:message name="GetAveragedDataResponse">
+    <wsdl:part name="parameters" element="ns:AveragedDataResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMeasurementBasedEventsRequest">
+    <wsdl:part name="parameters" element="ns:MeasurementBasedEventsRequest" />
+  </wsdl:message>
+  <wsdl:message name="GetMeasurementBasedEventsResponse">
+    <wsdl:part name="parameters" element="ns:MeasurementBasedEventsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMeasurementBasedOverviewStateRequest">
+    <wsdl:part name="parameters" element="ns:MeasurementBasedOverviewStateRequest" />
+  </wsdl:message>
+  <wsdl:message name="GetMeasurementBasedOverviewStateResponse">
+    <wsdl:part name="parameters" element="ns:MeasurementBasedOverviewStateResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetReferenceAngleRequest">
+    <wsdl:part name="parameters" element="ns:ReferenceAngleRequest" />
+  </wsdl:message>
+  <wsdl:message name="GetReferenceAngleResponse">
+    <wsdl:part name="parameters" element="ns:ReferenceAngleResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetPdxDataAndEventsRequest">
+    <wsdl:part name="parameters" element="ns:PdxDataAndEventsRequest" />
+  </wsdl:message>
+  <wsdl:message name="GetPdxDataAndEventsResponse">
+    <wsdl:part name="parameters" element="ns:PdxDataAndEventsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetModeSettingsRequest">
+    <wsdl:part name="parameters" element="ns:ModeSettingsRequest" />
+  </wsdl:message>
+  <wsdl:message name="GetModeSettingsResponse">
+    <wsdl:part name="parameters" element="ns:ModeSettingsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetDataElementSettingsRequest">
+    <wsdl:part name="parameters" element="ns:DataElementSettingsRequest" />
+  </wsdl:message>
+  <wsdl:message name="GetDataElementSettingsResponse">
+    <wsdl:part name="parameters" element="ns:DataElementSettingsResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetConfigurationRequest">
+    <wsdl:part name="parameters" element="ns:ConfigurationRequest" />
+  </wsdl:message>
+  <wsdl:message name="GetConfigurationResponse">
+    <wsdl:part name="parameters" element="ns:ConfigurationResponse" />
+  </wsdl:message>
+  <wsdl:message name="GetMappingsRequest">
+    <wsdl:part name="parameters" element="ns:MappingsRequest" />
+  </wsdl:message>
+  <wsdl:message name="GetMappingsResponse">
+    <wsdl:part name="parameters" element="ns:MappingsResponse" />
+  </wsdl:message>
+  <wsdl:message name="InvalidParametersFault">
+    <wsdl:part name="FaultDetail" element="ns:InvalidParametersFaultDetail" />
+  </wsdl:message>
+  <wsdl:message name="InternalServerFault">
+    <wsdl:part name="FaultDetail" element="ns:InternalServerFaultDetail" />
+  </wsdl:message>
+  <wsdl:message name="InvalidDataFault">
+    <wsdl:part name="FaultDetail" element="ns:InvalidDataFaultDetail" />
+  </wsdl:message>
+  <wsdl:portType name="HistoricalTrendProvider">
+    <wsdl:operation name="GetPmuMinMaxData">
+      <wsdl:documentation>Gets min/max summary data for a set of PMU measurements</wsdl:documentation>
+      <wsdl:input message="tns:GetPmuMinMaxDataRequest" />
+      <wsdl:output message="tns:GetPmuMinMaxDataResponse" />
+      <wsdl:fault name="InvalidParametersFault" message="tns:InvalidParametersFault" />
+      <wsdl:fault name="InternalServerFault" message="tns:InternalServerFault" />
+    </wsdl:operation>
+    <wsdl:operation name="GetFullResolutionData">
+      <wsdl:documentation>Gets full resolution data for a set of PMU measurements</wsdl:documentation>
+      <wsdl:input message="tns:GetFullResolutionDataRequest" />
+      <wsdl:output message="tns:GetFullResolutionDataResponse" />
+      <wsdl:fault name="InvalidParametersFault" message="tns:InvalidParametersFault" />
+      <wsdl:fault name="InternalServerFault" message="tns:InternalServerFault" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPdxModeFilteredData">
+      <wsdl:documentation>Gets PDX mode filtered data for a set of PDX IDs</wsdl:documentation>
+      <wsdl:input message="tns:GetPdxModeFilteredDataRequest" />
+      <wsdl:output message="tns:GetPdxModeFilteredDataResponse" />
+      <wsdl:fault name="InvalidParametersFault" message="tns:InvalidParametersFault" />
+      <wsdl:fault name="InternalServerFault" message="tns:InternalServerFault" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPdxModeCentricData">
+      <wsdl:documentation>Gets PDX mode centric data for a set of PDX mode centric IDs</wsdl:documentation>
+      <wsdl:input message="tns:GetPdxModeCentricDataRequest" />
+      <wsdl:output message="tns:GetPdxModeCentricDataResponse" />
+      <wsdl:fault name="InvalidParametersFault" message="tns:InvalidParametersFault" />
+      <wsdl:fault name="InternalServerFault" message="tns:InternalServerFault" />
+    </wsdl:operation>
+    <wsdl:operation name="GetAveragedData">
+      <wsdl:documentation>Gets one second averaged data for a set of substations and measurement types</wsdl:documentation>
+      <wsdl:input message="tns:GetAveragedDataRequest" />
+      <wsdl:output message="tns:GetAveragedDataResponse" />
+      <wsdl:fault name="InvalidParametersFault" message="tns:InvalidParametersFault" />
+      <wsdl:fault name="InternalServerFault" message="tns:InternalServerFault" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMeasurementBasedEvents">
+      <wsdl:documentation>Gets events generated directly from measurement values (magnitude/wams/substation)</wsdl:documentation>
+      <wsdl:input message="tns:GetMeasurementBasedEventsRequest" />
+      <wsdl:output message="tns:GetMeasurementBasedEventsResponse" />
+      <wsdl:fault name="InvalidParametersFault" message="tns:InvalidParametersFault" />
+      <wsdl:fault name="InternalServerFault" message="tns:InternalServerFault" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMeasurementBasedOverviewState">
+      <wsdl:documentation>Gets overview state for all magnitude event types</wsdl:documentation>
+      <wsdl:input message="tns:GetMeasurementBasedOverviewStateRequest" />
+      <wsdl:output message="tns:GetMeasurementBasedOverviewStateResponse" />
+      <wsdl:fault name="InvalidParametersFault" message="tns:InvalidParametersFault" />
+      <wsdl:fault name="InternalServerFault" message="tns:InternalServerFault" />
+    </wsdl:operation>
+    <wsdl:operation name="GetReferenceAngle">
+      <wsdl:documentation>Gets reference angle measurement ID changes</wsdl:documentation>
+      <wsdl:input message="tns:GetReferenceAngleRequest" />
+      <wsdl:output message="tns:GetReferenceAngleResponse" />
+      <wsdl:fault name="InvalidParametersFault" message="tns:InvalidParametersFault" />
+      <wsdl:fault name="InternalServerFault" message="tns:InternalServerFault" />
+    </wsdl:operation>
+    <wsdl:operation name="GetPdxDataAndEvents">
+      <wsdl:documentation>Gets all PDX related values and events</wsdl:documentation>
+      <wsdl:input message="tns:GetPdxDataAndEventsRequest" />
+      <wsdl:output message="tns:GetPdxDataAndEventsResponse" />
+      <wsdl:fault name="InvalidParametersFault" message="tns:InvalidParametersFault" />
+      <wsdl:fault name="InternalServerFault" message="tns:InternalServerFault" />
+    </wsdl:operation>
+    <wsdl:operation name="GetModeSettings">
+      <wsdl:documentation>Gets latest PDX mode band values</wsdl:documentation>
+      <wsdl:input message="tns:GetModeSettingsRequest" />
+      <wsdl:output message="tns:GetModeSettingsResponse" />
+      <wsdl:fault name="InvalidParametersFault" message="tns:InvalidParametersFault" />
+      <wsdl:fault name="InternalServerFault" message="tns:InternalServerFault" />
+    </wsdl:operation>
+    <wsdl:operation name="GetDataElementSettings">
+      <wsdl:documentation>Gets latest magnitude event limit values</wsdl:documentation>
+      <wsdl:input message="tns:GetDataElementSettingsRequest" />
+      <wsdl:output message="tns:GetDataElementSettingsResponse" />
+      <wsdl:fault name="InvalidParametersFault" message="tns:InvalidParametersFault" />
+      <wsdl:fault name="InternalServerFault" message="tns:InternalServerFault" />
+    </wsdl:operation>
+    <wsdl:operation name="GetConfiguration">
+      <wsdl:documentation>Gets latest measurement configuration</wsdl:documentation>
+      <wsdl:input message="tns:GetConfigurationRequest" />
+      <wsdl:output message="tns:GetConfigurationResponse" />
+      <wsdl:fault name="InvalidParametersFault" message="tns:InvalidParametersFault" />
+      <wsdl:fault name="InternalServerFault" message="tns:InternalServerFault" />
+    </wsdl:operation>
+    <wsdl:operation name="GetMappings">
+      <wsdl:documentation>Gets latest mappings for angle differences and power corridors</wsdl:documentation>
+      <wsdl:input message="tns:GetMappingsRequest" />
+      <wsdl:output message="tns:GetMappingsResponse" />
+      <wsdl:fault name="InvalidParametersFault" message="tns:InvalidParametersFault" />
+      <wsdl:fault name="InternalServerFault" message="tns:InternalServerFault" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="HistoricalTrendProvider12" type="tns:HistoricalTrendProvider">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="GetPmuMinMaxData">
+      <soap12:operation soapAction="http://www.eterra.com/public/services/data/historicaltrendprovider/GetPmuMinMaxData" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="InvalidParametersFault">
+        <soap12:fault use="literal" name="InvalidParametersFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="InternalServerFault">
+        <soap12:fault use="literal" name="InternalServerFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetFullResolutionData">
+      <soap12:operation soapAction="http://www.eterra.com/public/services/data/historicaltrendprovider/GetFullResolutionData" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="InvalidParametersFault">
+        <soap12:fault use="literal" name="InvalidParametersFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="InternalServerFault">
+        <soap12:fault use="literal" name="InternalServerFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetPdxModeFilteredData">
+      <soap12:operation soapAction="http://www.eterra.com/public/services/data/historicaltrendprovider/GetPdxModeFilteredData" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="InvalidParametersFault">
+        <soap12:fault use="literal" name="InvalidParametersFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="InternalServerFault">
+        <soap12:fault use="literal" name="InternalServerFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetPdxModeCentricData">
+      <soap12:operation soapAction="http://www.eterra.com/public/services/data/historicaltrendprovider/GetPdxModeCentricData" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="InvalidParametersFault">
+        <soap12:fault use="literal" name="InvalidParametersFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="InternalServerFault">
+        <soap12:fault use="literal" name="InternalServerFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetAveragedData">
+      <soap12:operation soapAction="http://www.eterra.com/public/services/data/historicaltrendprovider/GetAveragedData" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="InvalidParametersFault">
+        <soap12:fault use="literal" name="InvalidParametersFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="InternalServerFault">
+        <soap12:fault use="literal" name="InternalServerFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetMeasurementBasedEvents">
+      <soap12:operation soapAction="http://www.eterra.com/public/services/data/historicaltrendprovider/GetMeasurementBasedEvents" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="InvalidParametersFault">
+        <soap12:fault use="literal" name="InvalidParametersFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="InternalServerFault">
+        <soap12:fault use="literal" name="InternalServerFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetMeasurementBasedOverviewState">
+      <soap12:operation soapAction="http://www.eterra.com/public/services/data/historicaltrendprovider/GetMeasurementBasedOverviewState" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="InvalidParametersFault">
+        <soap12:fault use="literal" name="InvalidParametersFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="InternalServerFault">
+        <soap12:fault use="literal" name="InternalServerFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetReferenceAngle">
+      <soap12:operation soapAction="http://www.eterra.com/public/services/data/historicaltrendprovider/GetReferenceAngle" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="InvalidParametersFault">
+        <soap12:fault use="literal" name="InvalidParametersFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="InternalServerFault">
+        <soap12:fault use="literal" name="InternalServerFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetPdxDataAndEvents">
+      <soap12:operation soapAction="http://www.eterra.com/public/services/data/historicaltrendprovider/GetPdxDataAndEvents" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="InvalidParametersFault">
+        <soap12:fault use="literal" name="InvalidParametersFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="InternalServerFault">
+        <soap12:fault use="literal" name="InternalServerFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetModeSettings">
+      <soap12:operation soapAction="http://www.eterra.com/public/services/data/historicaltrendprovider/GetModeSettings" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="InvalidParametersFault">
+        <soap12:fault use="literal" name="InvalidParametersFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="InternalServerFault">
+        <soap12:fault use="literal" name="InternalServerFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetDataElementSettings">
+      <soap12:operation soapAction="http://www.eterra.com/public/services/data/historicaltrendprovider/GetDataElementSettings" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="InvalidParametersFault">
+        <soap12:fault use="literal" name="InvalidParametersFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="InternalServerFault">
+        <soap12:fault use="literal" name="InternalServerFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetConfiguration">
+      <soap12:operation soapAction="http://www.eterra.com/public/services/data/historicaltrendprovider/GetConfiguration" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="InvalidParametersFault">
+        <soap12:fault use="literal" name="InvalidParametersFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="InternalServerFault">
+        <soap12:fault use="literal" name="InternalServerFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="GetMappings">
+      <soap12:operation soapAction="http://www.eterra.com/public/services/data/historicaltrendprovider/GetMappings" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="InvalidParametersFault">
+        <soap12:fault use="literal" name="InvalidParametersFault" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="InternalServerFault">
+        <soap12:fault use="literal" name="InternalServerFault" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="HistoricalTrendProvider">
+    <wsdl:port name="HistoricalTrendProvider12" binding="tns:HistoricalTrendProvider12">
+      <soap12:address location="http://www.eterra.com/public/services/data/historicaltrendprovider" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
