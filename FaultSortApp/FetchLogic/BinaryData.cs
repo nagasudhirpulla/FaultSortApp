@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 
-namespace FaultSortApp
+namespace FaultSortApp.FetchLogic
 {
     public enum DataQuality
     {

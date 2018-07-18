@@ -96,6 +96,9 @@
     <Compile Include="FetchLogic\PhasorPointBinaryDataParser.cs" />
     <Compile Include="FetchLogic\PhasorPointEndpointBehavior.cs" />
     <Compile Include="FetchLogic\PhasorPointMessageInspector.cs" />
+    <Compile Include="PgFetchAdapter\PgAdapter.cs" />
+    <Compile Include="PgFetchAdapter\PgConfig.cs" />
+    <Compile Include="PgFetchAdapter\PgDbUtils.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

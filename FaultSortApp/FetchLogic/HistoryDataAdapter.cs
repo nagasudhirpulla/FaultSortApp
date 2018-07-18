@@ -14,7 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace FaultSortApp
+namespace FaultSortApp.FetchLogic
 {
     public class HistoryDataAdapter
     {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Xml;
 
-namespace FaultSortApp
+namespace FaultSortApp.FetchLogic
 {
     public class ConfigurationManager : DependencyObject
     {

@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FaultSortApp", "FaultSortApp\FaultSortApp.csproj", "{545D0144-64D3-4ED9-8D7E-309E4306846A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FaultSortAppTests", "FaultSortAppTests\FaultSortAppTests.csproj", "{01125660-5C2E-4ECB-8DA5-11DBE8F73AB5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{545D0144-64D3-4ED9-8D7E-309E4306846A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{545D0144-64D3-4ED9-8D7E-309E4306846A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{545D0144-64D3-4ED9-8D7E-309E4306846A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01125660-5C2E-4ECB-8DA5-11DBE8F73AB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01125660-5C2E-4ECB-8DA5-11DBE8F73AB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01125660-5C2E-4ECB-8DA5-11DBE8F73AB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01125660-5C2E-4ECB-8DA5-11DBE8F73AB5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

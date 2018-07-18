@@ -14,6 +14,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Npgsql;
+using FaultSortApp.FetchLogic;
+using FaultSortApp.PgFetchAdapter;
 /*
  https://www.codeproject.com/Articles/30989/Using-PostgreSQL-in-your-C-NET-application-An-intr
      */
@@ -47,6 +49,11 @@ namespace FaultSortApp
 
         private void FetchPostgresBtn_Click(object sender, RoutedEventArgs e)
         {
+            TestPgAdapter();
+        }
+
+        private void TestDirectPgExec()
+        {
             DataSet ds = new DataSet();
             DataTable dt = new DataTable();
             try
@@ -66,7 +73,7 @@ namespace FaultSortApp
                 NpgsqlConnection conn = new NpgsqlConnection(connstring);
                 conn.Open();
 
-                // quite complex sql statement
+                // sql statement
                 string sql = @"select min(src.stationname) as station, min(src.devicename) as line, string_agg(concat(src.pointname, '|', src.measurementid), '||') as line_measurements from 
                             (select *
                             from measurement
@@ -86,6 +93,26 @@ namespace FaultSortApp
                 ResDataGridView.DataContext = dt;
                 // since we only showing the result we don't need connection anymore
                 conn.Close();
+            }
+            catch (Exception msg)
+            {
+                // something went wrong, and you wanna know why
+                MessageBox.Show(msg.ToString());
+                throw;
+            }
+        }
+
+        private void TestPgAdapter()
+        {
+            try
+            {
+                PgAdapter pgAdapter = new PgAdapter(new PgConfig());
+                // sql statement
+                string sql = PgDbUtils.SSLinesDataFetchSQL;
+                pgAdapter.OpenConn();
+                DataTable dt = pgAdapter.GetSQLDataTable(sql);
+                ResDataGridView.DataContext = dt;
+                pgAdapter.CloseConn();
             }
             catch (Exception msg)
             {
