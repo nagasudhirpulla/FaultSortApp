@@ -58,6 +58,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="FaultSortEngine\FaultSortEngineTests.cs" />
     <Compile Include="FetchLogic\HistoryDataAdapterTests.cs" />
     <Compile Include="PgFetchAdapter\PgAdapterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

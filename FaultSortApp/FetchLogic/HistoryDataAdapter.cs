@@ -24,10 +24,16 @@ namespace FaultSortApp.FetchLogic
         string _password;
         PhasorPointEndpointBehavior _endpointBehavior;
         HistoricalTrendProviderClient _serviceClient;
-        ConfigurationManager _configuration;
+        public ConfigurationManager _configuration { get; set; }
+
         public void Initialize(ConfigurationManager configuration)
         {
             _configuration = configuration;
+            Initialize();
+        }
+
+        public void Initialize()
+        {
             ServicePointManager.ServerCertificateValidationCallback += ValidateRemoteCertificate;
             _endpointBehavior = new PhasorPointEndpointBehavior();
         }

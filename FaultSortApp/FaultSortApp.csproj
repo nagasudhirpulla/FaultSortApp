@@ -79,6 +79,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="FaultSortEngine\FaultSortEngine.cs" />
     <Compile Include="FetchLogic\BinaryData.cs" />
     <Compile Include="FetchLogic\ConfigurationManager.cs" />
     <Compile Include="Connected Services\HistoryProvider\Reference.cs">
