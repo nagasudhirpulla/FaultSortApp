@@ -15,8 +15,8 @@ namespace FaultSortApp.FaultSortEngine
         private PgAdapter PgAdapter = new PgAdapter(new PgConfig());
         private HistoryDataAdapter historyDataAdapter;
         public DataTable LineMeasurementsDataTable { get; set; }
-        public DateTime windowStartTime { get; set; } = DateTime.Now.AddHours(-1);
-        public DateTime windowEndTime { get; set; } = DateTime.Now.AddHours(-1).AddMinutes(1);
+        public DateTime WindowStartTime { get; set; } = DateTime.Now.AddHours(-1);
+        public DateTime WindowEndTime { get; set; } = DateTime.Now.AddHours(-1).AddMinutes(1);
 
 
         public FaultSortEngine()
@@ -44,7 +44,7 @@ namespace FaultSortApp.FaultSortEngine
             historyDataAdapter.Initialize();
         }
 
-        public void GetSSLinesInfo()
+        public void GetLinesInfoFromDb()
         {
             // the Substations Lines Info
             try
@@ -57,7 +57,7 @@ namespace FaultSortApp.FaultSortEngine
                 // check if the column names of the data table are station, line, line_measurements
                 List<string> tableColumns = dt.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToList();
                 List<string> essentialCols = new List<string> { "station", "line", "line_measurements" };
-                bool essentialColsPresent = tableColumns.All(col => essentialCols.Contains(col));
+                bool essentialColsPresent = essentialCols.All(col => tableColumns.Contains(col));
                 if (!essentialColsPresent)
                 {
                     throw new Exception($"The expeted columns {string.Join(", ", essentialCols)} are not present");
@@ -78,7 +78,7 @@ namespace FaultSortApp.FaultSortEngine
                      });
                     IEnumerable<string> measKeys = measPairs.ToList().Select(measPair => measPair.Item1);
                     List<string> essentialMeasKeys = "IBM,IYA,IPM,IRM,IRA,IYM,IBA,IPA".Split(new String[] { "," }, StringSplitOptions.None).ToList();
-                    bool allMeasKeysPresent = measKeys.All(measKey => essentialMeasKeys.Contains(measKey));
+                    bool allMeasKeysPresent = essentialMeasKeys.All(measKey => measKeys.Contains(measKey));
                     if (!allMeasKeysPresent)
                     {
                         dr.Delete();
@@ -87,6 +87,7 @@ namespace FaultSortApp.FaultSortEngine
                     // create the measurement lookup dictionary for the line
                     dr["meas_dict"] = measPairs.ToDictionary(x => x.Item1, x => Int32.Parse(x.Item2));
                 }
+                dt.AcceptChanges();
                 LineMeasurementsDataTable = dt;
             }
             catch (Exception e)
@@ -97,7 +98,7 @@ namespace FaultSortApp.FaultSortEngine
             }
         }
 
-        public async Task<Dictionary<object, List<PMUDataStructure>>> GetSSDataAsync(Dictionary<string, int> measDict, DateTime startTime, DateTime endTime)
+        public async Task<Dictionary<object, List<PMUDataStructure>>> GetLineDataAsync(Dictionary<string, int> measDict, DateTime startTime, DateTime endTime)
         {
             //IBM,IYA,IPM,IRM,IRA,IYM,IBA,IPA
             List<int> measIds = measDict.Values.ToList();
@@ -106,9 +107,9 @@ namespace FaultSortApp.FaultSortEngine
             return data;
         }
 
-        public async Task<DataTable> GetSSDataTableAsync(Dictionary<string, int> measDict, DateTime startTime, DateTime endTime, bool discardBad)
+        public async Task<DataTable> GetLineDataTableAsync(Dictionary<string, int> measDict, DateTime startTime, DateTime endTime, bool discardBad = true)
         {
-            Dictionary<object, List<PMUDataStructure>> data = await GetSSDataAsync(measDict, startTime, endTime);
+            Dictionary<object, List<PMUDataStructure>> data = await GetLineDataAsync(measDict, startTime, endTime);
             // create a data table based on the rows
             DataTable dt = new DataTable();
             // Add columns to the table
@@ -118,6 +119,11 @@ namespace FaultSortApp.FaultSortEngine
                 dt.Columns.Add(key, typeof(float));
                 dt.Columns.Add(key + ".quality", typeof(DataQuality));
             });
+
+            if (data == null)
+            {
+                return dt;
+            }
 
             int RowsCount = data[data.Keys.ElementAt(0)].Count;
             for (int fetchRowIter = 0; fetchRowIter < RowsCount; fetchRowIter++)
@@ -161,14 +167,14 @@ namespace FaultSortApp.FaultSortEngine
         {
             List<string> columnNames = dt.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToList();
             List<string> essentialColumnNames = "timestamp, IBM, IYA, IPM, IRM, IRA, IYM, IBA, IPA".Split(new string[] { ", " }, StringSplitOptions.None).ToList();
-            bool isEssentialColsPresent = columnNames.All(col => essentialColumnNames.Contains(col));
+            bool isEssentialColsPresent = essentialColumnNames.All(col => columnNames.Contains(col));
             if (!isEssentialColsPresent)
             {
                 throw (new Exception("All required Columns are not present for processing max current ratio"));
             }
 
             double maxRatio = 0.0;
-            DateTime maxRatioTime;
+            DateTime maxRatioTime = new DateTime();
 
             for (int rowIter = 0; rowIter < dt.Rows.Count; rowIter++)
             {
@@ -185,6 +191,29 @@ namespace FaultSortApp.FaultSortEngine
                 }
             }
             return new Tuple<double, DateTime>(maxRatio, maxRatioTime);
+        }
+
+        public async Task<List<Tuple<double, string, DateTime>>> GetAllMaxCurrRatios(DateTime starttime, DateTime endTime)
+        {
+            List<Tuple<double, string, DateTime>> maxCurrRatios = new List<Tuple<double, string, DateTime>>();
+            for (int lineIter = 0; lineIter < LineMeasurementsDataTable.Rows.Count; lineIter++)
+            {
+                //Iterate through all the lines
+                DataRow dr = LineMeasurementsDataTable.Rows[lineIter];
+                Dictionary<string, int> lineMeasInfo = (Dictionary<string, int>)dr["meas_dict"];
+                DataTable dt = await GetLineDataTableAsync(lineMeasInfo, starttime, endTime, true);
+                Tuple<double, DateTime> maxCurrRatioVal = GetMaxTableCurrentRatio(dt);
+                Tuple<double, string, DateTime> maxCurrRatio = new Tuple<double, string, DateTime>(maxCurrRatioVal.Item1, (string)dr["station"], maxCurrRatioVal.Item2);
+                maxCurrRatios.Add(maxCurrRatio);
+            }
+            return maxCurrRatios;
+        }
+
+        public async Task<List<Tuple<double, string, DateTime>>> GetAllSortedMaxCurrRatios(DateTime starttime, DateTime endTime)
+        {
+            List<Tuple<double, string, DateTime>> maxCurrRatios = await GetAllMaxCurrRatios(starttime, endTime);
+            maxCurrRatios.Sort((a, b) => (b.Item1.CompareTo(a.Item1)));
+            return maxCurrRatios;
         }
 
     }

@@ -18,7 +18,7 @@ namespace FaultSortApp.FaultSortEngine.Tests
             try
             {
                 FaultSortEngine faultSortEngine = new FaultSortEngine();
-                faultSortEngine.GetSSLinesInfo();
+                faultSortEngine.GetLinesInfoFromDb();
             }
             catch (Exception e)
             {
@@ -44,13 +44,31 @@ namespace FaultSortApp.FaultSortEngine.Tests
                 DateTime startTime = DateTime.Now.AddHours(-1);
                 DateTime endTime = startTime.AddMinutes(1);
                 FaultSortEngine faultSortEngine = new FaultSortEngine();
-                DataTable dt = await faultSortEngine.GetSSDataTableAsync(testDict, startTime, endTime, true);
+                DataTable dt = await faultSortEngine.GetLineDataTableAsync(testDict, startTime, endTime, true);
             }
             catch (Exception e)
             {
                 Assert.Fail(e.Message);
             }
 
+        }
+
+        [TestMethod()]
+        public async Task GetAllSortedMaxCurrRatiosTest()
+        {
+            try
+            {
+                DateTime startTime = DateTime.Now.AddHours(-1);
+                DateTime endTime = startTime.AddMinutes(1);
+                FaultSortEngine faultSortEngine = new FaultSortEngine();
+                faultSortEngine.GetLinesInfoFromDb();
+                List<Tuple<double, string, DateTime>> sortedMaxCurrRatios = await faultSortEngine.GetAllSortedMaxCurrRatios(faultSortEngine.WindowStartTime, faultSortEngine.WindowEndTime);
+                List<double> sortedMaxCurrRatioVals = sortedMaxCurrRatios.Select(ratioTuple => ratioTuple.Item1).ToList();
+            }
+            catch (Exception e)
+            {
+                Assert.Fail(e.Message);
+            }
         }
     }
 }
