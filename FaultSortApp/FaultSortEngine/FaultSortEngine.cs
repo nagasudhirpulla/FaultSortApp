@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Numerics;
 using System.Threading.Tasks;
 using FaultSortApp.FetchLogic;
 using FaultSortApp.PgFetchAdapter;
@@ -154,6 +155,36 @@ namespace FaultSortApp.FaultSortEngine
                 }
             }
             return dt;
+        }
+
+        public Tuple<double, DateTime> GetMaxTableCurrentRatio(DataTable dt)
+        {
+            List<string> columnNames = dt.Columns.Cast<DataColumn>().Select(col => col.ColumnName).ToList();
+            List<string> essentialColumnNames = "timestamp, IBM, IYA, IPM, IRM, IRA, IYM, IBA, IPA".Split(new string[] { ", " }, StringSplitOptions.None).ToList();
+            bool isEssentialColsPresent = columnNames.All(col => essentialColumnNames.Contains(col));
+            if (!isEssentialColsPresent)
+            {
+                throw (new Exception("All required Columns are not present for processing max current ratio"));
+            }
+
+            double maxRatio = 0.0;
+            DateTime maxRatioTime;
+
+            for (int rowIter = 0; rowIter < dt.Rows.Count; rowIter++)
+            {
+                DataRow dr = dt.Rows[rowIter];
+                float i1Mag = (float)dr["IPM"];
+                Complex i2 = Complex.FromPolarCoordinates((float)dr["IRM"], (float)dr["IRA"]);
+                i2 = Complex.Add(i2, Complex.FromPolarCoordinates((float)dr["IYM"], (float)dr["IYA"] + 4 * Math.PI / 3));
+                i2 = Complex.Add(i2, Complex.FromPolarCoordinates((float)dr["IBM"], (float)dr["IBA"] + 2 * Math.PI / 3));
+                double currentRatio = 3 * i1Mag / i2.Magnitude;
+                if (currentRatio > maxRatio)
+                {
+                    maxRatio = currentRatio;
+                    maxRatioTime = (DateTime)dr["timestamp"];
+                }
+            }
+            return new Tuple<double, DateTime>(maxRatio, maxRatioTime);
         }
 
     }
