@@ -14,6 +14,9 @@ namespace FaultSortApp.FaultSortEngine
         private PgAdapter PgAdapter = new PgAdapter(new PgConfig());
         private HistoryDataAdapter historyDataAdapter;
         public DataTable LineMeasurementsDataTable { get; set; }
+        public DateTime windowStartTime { get; set; } = DateTime.Now.AddHours(-1);
+        public DateTime windowEndTime { get; set; } = DateTime.Now.AddHours(-1).AddMinutes(1);
+
 
         public FaultSortEngine()
         {
@@ -59,7 +62,7 @@ namespace FaultSortApp.FaultSortEngine
                     throw new Exception($"The expeted columns {string.Join(", ", essentialCols)} are not present");
                 }
 
-                dt.Columns.Add("meas_dict", typeof(Dictionary<string, string>));
+                dt.Columns.Add("meas_dict", typeof(Dictionary<string, int>));
 
                 // get only the rows with line_measurements having keys IBM, IYA, IPM, IRM, IRA, IYM, IBA, IPA
                 for (int i = dt.Rows.Count - 1; i >= 0; i--)
@@ -81,7 +84,7 @@ namespace FaultSortApp.FaultSortEngine
                         continue;
                     }
                     // create the measurement lookup dictionary for the line
-                    dr["meas_dict"] = measPairs.ToDictionary(x => x.Item1, x => x.Item2);
+                    dr["meas_dict"] = measPairs.ToDictionary(x => x.Item1, x => Int32.Parse(x.Item2));
                 }
                 LineMeasurementsDataTable = dt;
             }
@@ -91,6 +94,66 @@ namespace FaultSortApp.FaultSortEngine
                 Console.WriteLine(e.Message);
                 throw;
             }
+        }
+
+        public async Task<Dictionary<object, List<PMUDataStructure>>> GetSSDataAsync(Dictionary<string, int> measDict, DateTime startTime, DateTime endTime)
+        {
+            //IBM,IYA,IPM,IRM,IRA,IYM,IBA,IPA
+            List<int> measIds = measDict.Values.ToList();
+            int dataRate = 25;
+            Dictionary<object, List<PMUDataStructure>> data = await historyDataAdapter.GetDataAsync(startTime, endTime, measIds, true, false, dataRate);
+            return data;
+        }
+
+        public async Task<DataTable> GetSSDataTableAsync(Dictionary<string, int> measDict, DateTime startTime, DateTime endTime, bool discardBad)
+        {
+            Dictionary<object, List<PMUDataStructure>> data = await GetSSDataAsync(measDict, startTime, endTime);
+            // create a data table based on the rows
+            DataTable dt = new DataTable();
+            // Add columns to the table
+            dt.Columns.Add("timestamp", typeof(DateTime));
+            measDict.Keys.ToList().ForEach(key =>
+            {
+                dt.Columns.Add(key, typeof(float));
+                dt.Columns.Add(key + ".quality", typeof(DataQuality));
+            });
+
+            int RowsCount = data[data.Keys.ElementAt(0)].Count;
+            for (int fetchRowIter = 0; fetchRowIter < RowsCount; fetchRowIter++)
+            {
+                DataRow dr = dt.NewRow();
+                bool goodRow = true;
+                for (int measKeyIter = 0; measKeyIter < measDict.Keys.Count; measKeyIter++)
+                {
+                    // iterate through each measurement
+                    string measKey = measDict.Keys.ElementAt(measKeyIter);
+                    uint measId = (uint)measDict[measKey];
+                    PMUDataStructure fetchRow = data[measId][fetchRowIter];
+                    //discard bad
+                    if (discardBad)
+                    {
+                        if (fetchRow.Quality != DataQuality.Good && fetchRow.Quality != DataQuality.Replaced)
+                        {
+                            goodRow = false;
+                            break;
+                        }
+                    }
+
+                    dr[measKey] = fetchRow.Value[0];
+                    dr[measKey + ".quality"] = fetchRow.Quality;
+
+                    // get timestamp value
+                    if (measKeyIter == 0)
+                    {
+                        dr["timestamp"] = fetchRow.TimeStamp;
+                    }
+                }
+                if (goodRow)
+                {
+                    dt.Rows.Add(dr);
+                }
+            }
+            return dt;
         }
 
     }
