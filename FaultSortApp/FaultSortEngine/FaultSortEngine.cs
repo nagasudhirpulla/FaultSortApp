@@ -22,7 +22,9 @@ namespace FaultSortApp.FaultSortEngine
         public FaultSortEngine()
         {
             historyDataAdapter = new HistoryDataAdapter();
-            historyDataAdapter.Initialize();
+            ConfigurationManager configuration = new ConfigurationManager();
+            configuration.Initialize();
+            historyDataAdapter.Initialize(configuration);
             DoInitialStuff();
         }
 

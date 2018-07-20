@@ -29,28 +29,34 @@ namespace FaultSortApp.FetchLogic
         public void Initialize(ConfigurationManager configuration)
         {
             _configuration = configuration;
-            doInitStuff();
+            DoInitStuff();
         }
 
-        public void Initialize()
+        public void DoInitStuff()
         {
-            _configuration = new ConfigurationManager();
-            doInitStuff();
-        }
-
-        public void doInitStuff()
-        {
-            _configuration.Initialize();
             ServicePointManager.ServerCertificateValidationCallback += ValidateRemoteCertificate;
             _endpointBehavior = new PhasorPointEndpointBehavior();
+
+            _serviceUri = new UriBuilder("https", _configuration.Host, _configuration.Port, _configuration.Path).Uri;
+            _userName = _configuration.UserName;
+            _password = _configuration.Password;
         }
 
-        protected HistoricalTrendProviderClient CreateServiceClient()
+        protected void UpdateFromConfiguration()
         {
             _serviceUri = new UriBuilder("https", _configuration.Host, _configuration.Port, _configuration.Path).Uri;
             _userName = _configuration.UserName;
             _password = _configuration.Password;
+        }
 
+        protected HistoricalTrendProviderClient CreateServiceClient()
+        {
+            // todo find why this emits error here during async tasks
+            /*
+            _serviceUri = new UriBuilder("https", _configuration.Host, _configuration.Port, _configuration.Path).Uri;
+            _userName = _configuration.UserName;
+            _password = _configuration.Password;
+            */
             EndpointAddress endpoint = new EndpointAddress(_serviceUri);
 
             var security = SecurityBindingElement.CreateUserNameOverTransportBindingElement();
@@ -223,12 +229,13 @@ namespace FaultSortApp.FetchLogic
                     _serviceClient = CreateServiceClient();
                     _serviceClient.Open();
                     //byte[] data = _serviceClient.GetFullResolutionData(tre, measurementIDs.ToArray());
+                    /*
                     byte[] data = await Task.Run<byte[]>(() =>
                        {
                            return _serviceClient.GetFullResolutionData(tre, measurementIDs.ToArray());
                        });
-
-                    //byte[] data = (await _serviceClient.GetFullResolutionDataAsync(tre, measurementIDs.ToArray())).data;
+                    */
+                    byte[] data = (await _serviceClient.GetFullResolutionDataAsync(tre, measurementIDs.ToArray())).data;
                     _serviceClient.Close();
                     PhasorPointBinaryDataParser parser = new PhasorPointBinaryDataParser();
                     //parsedData = parser.Parse(data);
