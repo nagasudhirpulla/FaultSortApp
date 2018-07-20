@@ -178,7 +178,7 @@ namespace FaultSortApp.FaultSortEngine
                 Complex i2 = Complex.FromPolarCoordinates((float)dr["IRM"], ((float)dr["IRA"]) * Math.PI / 180);
                 i2 = Complex.Add(i2, Complex.FromPolarCoordinates((float)dr["IYM"], ((float)dr["IYA"] + 240) * Math.PI / 180));
                 i2 = Complex.Add(i2, Complex.FromPolarCoordinates((float)dr["IBM"], ((float)dr["IBA"] + 120) * Math.PI / 180));
-                double currentRatio = 3 * i1Mag / i2.Magnitude;
+                double currentRatio = i2.Magnitude / 3 * i1Mag;
                 if (currentRatio > maxRatio)
                 {
                     maxRatio = currentRatio;
