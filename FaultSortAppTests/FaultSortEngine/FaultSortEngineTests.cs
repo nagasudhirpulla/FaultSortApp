@@ -1,11 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FaultSortApp.FaultSortEngine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Data;
+using FaultSortApp.Utils;
 
 namespace FaultSortApp.FaultSortEngine.Tests
 {
@@ -64,6 +63,9 @@ namespace FaultSortApp.FaultSortEngine.Tests
                 faultSortEngine.GetLinesInfoFromDb();
                 List<Tuple<double, string, DateTime>> sortedMaxCurrRatios = await faultSortEngine.GetAllSortedMaxCurrRatios(faultSortEngine.WindowStartTime, faultSortEngine.WindowEndTime);
                 List<double> sortedMaxCurrRatioVals = sortedMaxCurrRatios.Select(ratioTuple => ratioTuple.Item1).ToList();
+                // dump the results to excel
+                string dateStr = DateTime.Now.ToString("yyyyMMddHHmmss");
+                ExcelUtils.DumpCurrRatioResultsToExcel(sortedMaxCurrRatios, $"E:\\sortedCurrRatios{dateStr}.xlsx");
             }
             catch (Exception e)
             {

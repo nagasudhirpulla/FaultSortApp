@@ -22,13 +22,11 @@ namespace FaultSortApp.FaultSortEngine
         public FaultSortEngine()
         {
             historyDataAdapter = new HistoryDataAdapter();
-            ConfigurationManager configuration = new ConfigurationManager();
-            configuration.Initialize();
-            historyDataAdapter.Initialize(configuration);
+            historyDataAdapter.Initialize();
             DoInitialStuff();
         }
 
-        public FaultSortEngine(ConfigurationManager configuration, PgConfig pgConfig)
+        public FaultSortEngine(ConfigManager configuration, PgConfig pgConfig)
         {
             historyDataAdapter = new HistoryDataAdapter();
             PgAdapter = new PgAdapter(pgConfig);

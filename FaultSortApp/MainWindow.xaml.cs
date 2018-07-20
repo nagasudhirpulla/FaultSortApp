@@ -26,13 +26,13 @@ namespace FaultSortApp
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ConfigurationManager configurationManager;
+        private ConfigManager configurationManager;
         private HistoryDataAdapter historyDataAdapter;
 
         public MainWindow()
         {
             InitializeComponent();
-            configurationManager = new ConfigurationManager();
+            configurationManager = new ConfigManager();
             configurationManager.Initialize();
             historyDataAdapter = new HistoryDataAdapter();
             historyDataAdapter.Initialize(configurationManager);

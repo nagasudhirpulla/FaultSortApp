@@ -24,11 +24,17 @@ namespace FaultSortApp.FetchLogic
         string _password;
         PhasorPointEndpointBehavior _endpointBehavior;
         HistoricalTrendProviderClient _serviceClient;
-        ConfigurationManager _configuration;
+        ConfigManager _configuration;
 
-        public void Initialize(ConfigurationManager configuration)
+        public void Initialize(ConfigManager configuration)
         {
             _configuration = configuration;
+            DoInitStuff();
+        }
+
+        public void Initialize()
+        {
+            _configuration = new ConfigManager();
             DoInitStuff();
         }
 
@@ -36,10 +42,12 @@ namespace FaultSortApp.FetchLogic
         {
             ServicePointManager.ServerCertificateValidationCallback += ValidateRemoteCertificate;
             _endpointBehavior = new PhasorPointEndpointBehavior();
-
+            _configuration.Initialize();
+            /*
             _serviceUri = new UriBuilder("https", _configuration.Host, _configuration.Port, _configuration.Path).Uri;
             _userName = _configuration.UserName;
             _password = _configuration.Password;
+            */
         }
 
         protected void UpdateFromConfiguration()
@@ -52,11 +60,11 @@ namespace FaultSortApp.FetchLogic
         protected HistoricalTrendProviderClient CreateServiceClient()
         {
             // todo find why this emits error here during async tasks
-            /*
+
             _serviceUri = new UriBuilder("https", _configuration.Host, _configuration.Port, _configuration.Path).Uri;
             _userName = _configuration.UserName;
             _password = _configuration.Password;
-            */
+
             EndpointAddress endpoint = new EndpointAddress(_serviceUri);
 
             var security = SecurityBindingElement.CreateUserNameOverTransportBindingElement();

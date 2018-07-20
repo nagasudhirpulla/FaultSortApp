@@ -16,7 +16,7 @@ namespace FaultSortApp.FetchLogic.Tests
         {
             try
             {
-                ConfigurationManager configurationManager = new ConfigurationManager();
+                ConfigManager configurationManager = new ConfigManager();
                 configurationManager.Initialize();
                 HistoryDataAdapter historyDataAdapter = new HistoryDataAdapter();
                 historyDataAdapter.Initialize(configurationManager);
