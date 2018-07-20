@@ -21,27 +21,22 @@ namespace FaultSortApp.FaultSortEngine
 
         public FaultSortEngine()
         {
-            historyDataAdapter = new HistoryDataAdapter
-            {
-                _configuration = new ConfigurationManager()
-            };
+            historyDataAdapter = new HistoryDataAdapter();
+            historyDataAdapter.Initialize();
             DoInitialStuff();
         }
 
         public FaultSortEngine(ConfigurationManager configuration, PgConfig pgConfig)
         {
-            historyDataAdapter = new HistoryDataAdapter
-            {
-                _configuration = configuration
-            };
+            historyDataAdapter = new HistoryDataAdapter();
             PgAdapter = new PgAdapter(pgConfig);
+            historyDataAdapter.Initialize(configuration);
             DoInitialStuff();
         }
 
         public void DoInitialStuff()
         {
-            historyDataAdapter._configuration.Initialize();
-            historyDataAdapter.Initialize();
+
         }
 
         public void GetLinesInfoFromDb()
@@ -180,9 +175,9 @@ namespace FaultSortApp.FaultSortEngine
             {
                 DataRow dr = dt.Rows[rowIter];
                 float i1Mag = (float)dr["IPM"];
-                Complex i2 = Complex.FromPolarCoordinates((float)dr["IRM"], (float)dr["IRA"]);
-                i2 = Complex.Add(i2, Complex.FromPolarCoordinates((float)dr["IYM"], (float)dr["IYA"] + 4 * Math.PI / 3));
-                i2 = Complex.Add(i2, Complex.FromPolarCoordinates((float)dr["IBM"], (float)dr["IBA"] + 2 * Math.PI / 3));
+                Complex i2 = Complex.FromPolarCoordinates((float)dr["IRM"], ((float)dr["IRA"]) * Math.PI / 180);
+                i2 = Complex.Add(i2, Complex.FromPolarCoordinates((float)dr["IYM"], ((float)dr["IYA"] + 240) * Math.PI / 180));
+                i2 = Complex.Add(i2, Complex.FromPolarCoordinates((float)dr["IBM"], ((float)dr["IBA"] + 120) * Math.PI / 180));
                 double currentRatio = 3 * i1Mag / i2.Magnitude;
                 if (currentRatio > maxRatio)
                 {

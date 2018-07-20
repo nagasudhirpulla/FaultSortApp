@@ -24,16 +24,23 @@ namespace FaultSortApp.FetchLogic
         string _password;
         PhasorPointEndpointBehavior _endpointBehavior;
         HistoricalTrendProviderClient _serviceClient;
-        public ConfigurationManager _configuration { get; set; }
+        ConfigurationManager _configuration;
 
         public void Initialize(ConfigurationManager configuration)
         {
             _configuration = configuration;
-            Initialize();
+            doInitStuff();
         }
 
         public void Initialize()
         {
+            _configuration = new ConfigurationManager();
+            doInitStuff();
+        }
+
+        public void doInitStuff()
+        {
+            _configuration.Initialize();
             ServicePointManager.ServerCertificateValidationCallback += ValidateRemoteCertificate;
             _endpointBehavior = new PhasorPointEndpointBehavior();
         }
@@ -216,13 +223,12 @@ namespace FaultSortApp.FetchLogic
                     _serviceClient = CreateServiceClient();
                     _serviceClient.Open();
                     //byte[] data = _serviceClient.GetFullResolutionData(tre, measurementIDs.ToArray());
-                    /*
-                     * byte[] data = await Task.Run<byte[]>(() =>
-                        {
-                            return _serviceClient.GetFullResolutionData(tre, measurementIDs.ToArray());
-                        });
-                   */
-                    byte[] data = (await _serviceClient.GetFullResolutionDataAsync(tre, measurementIDs.ToArray())).data;
+                    byte[] data = await Task.Run<byte[]>(() =>
+                       {
+                           return _serviceClient.GetFullResolutionData(tre, measurementIDs.ToArray());
+                       });
+
+                    //byte[] data = (await _serviceClient.GetFullResolutionDataAsync(tre, measurementIDs.ToArray())).data;
                     _serviceClient.Close();
                     PhasorPointBinaryDataParser parser = new PhasorPointBinaryDataParser();
                     //parsedData = parser.Parse(data);
