@@ -175,10 +175,16 @@ namespace FaultSortApp.FaultSortEngine
             {
                 DataRow dr = dt.Rows[rowIter];
                 float i1Mag = (float)dr["IPM"];
+                /*
+                // this for checking with i1Mag and calculated i1.Magnitude
+                Complex i1 = Complex.FromPolarCoordinates((float)dr["IRM"], ((float)dr["IRA"]) * Math.PI / 180);
+                i1 = Complex.Add(i1, Complex.FromPolarCoordinates((float)dr["IYM"], ((float)dr["IYA"] + 120) * Math.PI / 180));
+                i1 = Complex.Add(i1, Complex.FromPolarCoordinates((float)dr["IBM"], ((float)dr["IBA"] + 240) * Math.PI / 180));
+                */
                 Complex i2 = Complex.FromPolarCoordinates((float)dr["IRM"], ((float)dr["IRA"]) * Math.PI / 180);
                 i2 = Complex.Add(i2, Complex.FromPolarCoordinates((float)dr["IYM"], ((float)dr["IYA"] + 240) * Math.PI / 180));
                 i2 = Complex.Add(i2, Complex.FromPolarCoordinates((float)dr["IBM"], ((float)dr["IBA"] + 120) * Math.PI / 180));
-                double currentRatio = i2.Magnitude / 3 * i1Mag;
+                double currentRatio = i2.Magnitude / (3 * i1Mag);
                 if (currentRatio > maxRatio)
                 {
                     maxRatio = currentRatio;
