@@ -1,0 +1,60 @@
+﻿<Window x:Class="FaultSortApp.SortChartWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FaultSortApp"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        mc:Ignorable="d"
+        Title="SortChartWindow" Height="800" Width="800">
+    <ScrollViewer Margin="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <Grid x:Name="DashboardContainer">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="{Binding ConsoleHeight_}"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid x:Name="ChartContainer" Grid.Row="0" Width="Auto">
+                <lvc:CartesianChart Series="{Binding SeriesCollection}" Grid.Row="1" Name="MyChart" Zoom="X" Pan="Xy" DisableAnimations="True" Hoverable="True">
+                    <lvc:CartesianChart.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="ResetAxis" Click="Reset_Click"></MenuItem>
+                        </ContextMenu>
+                    </lvc:CartesianChart.ContextMenu>
+                    <lvc:CartesianChart.ChartLegend>
+                        <lvc:DefaultLegend/>
+                    </lvc:CartesianChart.ChartLegend>
+                    <lvc:CartesianChart.AxisY>
+                        <lvc:Axis Title="Substations" Foreground="{Binding CellForegroundStr}">
+                            <lvc:Axis.Separator>
+                                <lvc:Separator IsEnabled="True"></lvc:Separator>
+                            </lvc:Axis.Separator>
+                        </lvc:Axis>
+                    </lvc:CartesianChart.AxisY>
+                    <lvc:CartesianChart.AxisX>
+                        <lvc:Axis Title="Current Ratio I_Negative/I_Possitive" LabelFormatter="{Binding XFormatter}" Foreground="{Binding CellForegroundStr}">
+                            <lvc:Axis.Separator>
+                                <lvc:Separator IsEnabled="True"></lvc:Separator>
+                            </lvc:Axis.Separator>
+                        </lvc:Axis>
+                    </lvc:CartesianChart.AxisX>
+                </lvc:CartesianChart>
+            </Grid>
+            <ScrollViewer Name="Scroller" Margin="0" Background="Black" Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Clear Console" Click="ClearConsole_Click"></MenuItem>
+                    </ContextMenu>
+                </ScrollViewer.ContextMenu>
+                <StackPanel>
+                    <ItemsControl Name="consoleItems">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <TextBox IsReadOnly="True" Text="{Binding Path=.}" Background="Transparent" BorderThickness="1" Foreground="#AAAAAA" FontFamily="Consolas" BorderBrush="#555555"/>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+    </ScrollViewer>
+</Window>
