@@ -10,11 +10,33 @@
     <ScrollViewer Margin="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
         <Grid x:Name="DashboardContainer">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="{Binding ConsoleHeight_}"></RowDefinition>
             </Grid.RowDefinitions>
-            <Grid x:Name="ChartContainer" Grid.Row="0" Width="Auto">
-                <lvc:CartesianChart Series="{Binding SeriesCollection}" Grid.Row="1" Name="MyChart" Zoom="X" Pan="Xy" DisableAnimations="True" Hoverable="True">
+            <Grid x:Name="HeaderContainer" Grid.Row="0" Width="Auto" Margin="10,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBlock Name="ChartTitle" Text="Sorted Current Ratios at " HorizontalAlignment="Center" Margin="15,10"></TextBlock>
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <TextBlock><Run Text="Fetch"/><LineBreak/><Run Text="Interval(mins) - "/></TextBlock>
+                    <TextBox Name="FetchPeriodMinsInputTB" Text="5" Margin="5,0" Padding="5,1"></TextBox>
+                    <Button Name="AutoFetchStart" Click="AutoFetchStart_Click" Content="Auto Fetch" Margin="0,0,5,0"></Button>
+                    <Button Name="FetchStopBtn" Click="FetchStopBtn_Click" Content="Stop&#xD;&#xA;Auto Fetch" Margin="0,0,5,0"></Button>
+                </StackPanel>
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <DatePicker Name="FetchDatePicker"></DatePicker>
+                    <TextBox Name="HoursInputTB" Text="0" Padding="5,1"></TextBox>
+                    <TextBox Name="MinutesInputTB" Text="0" Padding="5,1"></TextBox>
+                    <TextBox Name="SecondsInputTB" Text="0" Padding="5,1"></TextBox>
+                    <Button Name="FetchAtTimeBtn" Click="FetchAtTimeBtn_Click" Content="Fetch Data" Padding="1" Margin="5,0,0,0"></Button>
+                </StackPanel>
+            </Grid>
+            <Grid x:Name="ChartContainer" Grid.Row="1" Width="Auto">
+                <lvc:CartesianChart Series="{Binding SeriesCollection}" Grid.Row="1" Name="MyChart" Zoom="Xy" Pan="Xy" DisableAnimations="True" Hoverable="True" Margin="10,0">
                     <lvc:CartesianChart.ContextMenu>
                         <ContextMenu>
                             <MenuItem Header="ResetAxis" Click="Reset_Click"></MenuItem>
@@ -26,7 +48,7 @@
                     <lvc:CartesianChart.AxisY>
                         <lvc:Axis Title="Substations" Foreground="{Binding CellForegroundStr}">
                             <lvc:Axis.Separator>
-                                <lvc:Separator IsEnabled="True"></lvc:Separator>
+                                <lvc:Separator Step="1" IsEnabled="True"></lvc:Separator>
                             </lvc:Axis.Separator>
                         </lvc:Axis>
                     </lvc:CartesianChart.AxisY>
@@ -39,7 +61,7 @@
                     </lvc:CartesianChart.AxisX>
                 </lvc:CartesianChart>
             </Grid>
-            <ScrollViewer Name="Scroller" Margin="0" Background="Black" Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <ScrollViewer Name="Scroller" Margin="0" Background="Black" Grid.Row="2" VerticalScrollBarVisibility="Auto">
                 <ScrollViewer.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Clear Console" Click="ClearConsole_Click"></MenuItem>

@@ -204,7 +204,7 @@ namespace FaultSortApp.FaultSortEngine
                 Dictionary<string, int> lineMeasInfo = (Dictionary<string, int>)dr["meas_dict"];
                 DataTable dt = await GetLineDataTableAsync(lineMeasInfo, starttime, endTime, true);
                 Tuple<double, DateTime> maxCurrRatioVal = GetMaxTableCurrentRatio(dt);
-                Tuple<double, string, DateTime> maxCurrRatio = new Tuple<double, string, DateTime>(maxCurrRatioVal.Item1, (string)dr["station"], maxCurrRatioVal.Item2);
+                Tuple<double, string, DateTime> maxCurrRatio = new Tuple<double, string, DateTime>(maxCurrRatioVal.Item1, (string)dr["line"] + "@" + (string)dr["station"], maxCurrRatioVal.Item2);
                 maxCurrRatios.Add(maxCurrRatio);
             }
             return maxCurrRatios;
