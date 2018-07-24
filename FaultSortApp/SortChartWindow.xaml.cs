@@ -47,7 +47,7 @@ namespace FaultSortApp
             UpdateFetcherInterval();
             FetchTimer_.Tick += Fetch_Timer_Tick;
             //PlotTestData();
-            PlotEngineData(DateTime.Now.AddMilliseconds(-40));
+            //PlotEngineData(DateTime.Now.AddMilliseconds(-40));
         }
 
         public void UpdateFetcherInterval()
@@ -59,7 +59,7 @@ namespace FaultSortApp
         {
             dc.AddItemsToConsole("Started fetching values from Historian...");
             DateTime startTime = plotTime;
-            DateTime endTime = startTime.AddMilliseconds(40);
+            DateTime endTime = startTime.AddMinutes(1);
             FaultSortEngine.FaultSortEngine faultSortEngine = new FaultSortEngine.FaultSortEngine();
             faultSortEngine.GetLinesInfoFromDb();
             List<Tuple<double, string, DateTime>> sortedMaxCurrRatios = await faultSortEngine.GetAllSortedMaxCurrRatios(startTime, endTime);
